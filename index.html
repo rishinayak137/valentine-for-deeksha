@@ -11,7 +11,7 @@ body {
     height: 100vh;
     overflow: hidden;
     background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
     text-align: center;
 }
@@ -25,77 +25,99 @@ body {
     flex-direction: column;
 }
 
-h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-}
-
-h2 {
-    font-size: 1.8rem;
-    font-weight: 300;
-}
+h1 { font-size: 3.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+h2 { font-size: 1.8rem; font-weight: 300; }
 
 .heart {
-    font-size: 4rem;
+    font-size: 5rem;
     animation: beat 1.2s infinite;
 }
 
 @keyframes beat {
     0%,100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    50% { transform: scale(1.1); }
 }
 
 /* BUTTONS */
-.buttons {
-    margin-top: 30px;
-}
-
+.buttons { margin-top: 30px; position: relative; width: 100%; height: 100px; }
 button {
     font-size: 1.2rem;
-    padding: 12px 30px;
+    padding: 12px 35px;
     margin: 10px;
     border: none;
     border-radius: 30px;
     cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
 }
 
-#yesBtn {
-    background: #ff2e63;
-    color: white;
-}
+#yesBtn { background: #ff2e63; color: white; box-shadow: 0 5px 15px rgba(255,46,99,0.4); }
+#noBtn { background: white; color: #ff2e63; position: absolute; left: 55%; }
 
-#noBtn {
-    background: white;
-    color: #ff2e63;
-    position: absolute;
-}
-
-/* SUCCESS PAGE */
+/* SUCCESS PAGE CONTENT */
 #successPage {
     display: none;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    background: linear-gradient(135deg, #ff9a9e, #fecfef);
+    overflow-y: auto;
 }
 
-/* Floating hearts */
+/* RING ANIMATION */
+.ring {
+    font-size: 4rem;
+    margin-bottom: 10px;
+    animation: dropIn 1.5s ease-out;
+}
+
+@keyframes dropIn {
+    0% { transform: translateY(-200px) rotate(-45deg); opacity: 0; }
+    60% { transform: translateY(20px) rotate(10deg); }
+    100% { transform: translateY(0) rotate(0); opacity: 1; }
+}
+
+/* PHOTO STYLING */
+.photo-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.couple-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 5px solid white;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    animation: fadeIn 2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* FLOATING HEARTS */
 .heart-bg {
     position: absolute;
     bottom: -50px;
     font-size: 24px;
     animation: float 6s linear infinite;
     opacity: 0.7;
+    z-index: -1;
 }
 
 @keyframes float {
-    0% { transform: translateY(0); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translateY(-110vh); opacity: 0; }
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- PAGE 1 -->
 <div class="page" id="questionPage">
     <div class="heart">❤️</div>
     <h1>Deeksha</h1>
@@ -107,44 +129,54 @@ button {
     </div>
 </div>
 
-<!-- PAGE 2 -->
 <div class="page" id="successPage">
-    <div class="heart">💘</div>
+    <div class="ring">💍✨</div>
     <h1>YAYYYY!!! 😍</h1>
-    <h2>You just made me the happiest person ❤️</h2>
-    <p>Happy Valentine’s Day, Deeksha 💌</p>
+    <h2>You've made me the luckiest person!</h2>
+    
+    <div class="photo-container">
+        <img src="https://via.placeholder.com/150" alt="Our Photo 1" class="couple-photo">
+        <img src="https://via.placeholder.com/150" alt="Our Photo 2" class="couple-photo">
+    </div>
+
+    <p style="margin-top: 20px; font-size: 1.2rem;">Forever to go, Deeksha 💌</p>
 </div>
 
-<!-- MUSIC -->
-<iframe width="0" height="0"
-src="https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1&loop=1&playlist=2Vv-BfVoq4g"
-allow="autoplay">
-</iframe>
+<div id="musicContainer"></div>
 
 <script>
-/* NO BUTTON RUNS AWAY */
 const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
 
+/* NO BUTTON RUNS AWAY */
 noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 });
 
-/* YES BUTTON */
-document.getElementById("yesBtn").onclick = () => {
+/* YES BUTTON CLICK */
+yesBtn.onclick = () => {
     document.getElementById("questionPage").style.display = "none";
     document.getElementById("successPage").style.display = "flex";
+    
+    // Play Ed Sheeran - Perfect
+    // We inject the iframe here so it starts exactly when she says yes
+    document.getElementById("musicContainer").innerHTML = `
+        <iframe width="0" height="0" 
+        src="https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1" 
+        frameborder="0" allow="autoplay"></iframe>`;
 };
 
-/* FLOATING HEARTS */
+/* FLOATING HEARTS BACKGROUND */
 for (let i = 0; i < 25; i++) {
     let heart = document.createElement("div");
     heart.className = "heart-bg";
     heart.innerHTML = "❤️";
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+    heart.style.delay = Math.random() * 5 + "s";
     document.body.appendChild(heart);
 }
 </script>
