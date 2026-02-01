@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Deeksha ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    text-align: center;
+}
+
+/* MAIN PAGE */
+.page {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: 300;
+}
+
+.heart {
+    font-size: 4rem;
+    animation: beat 1.2s infinite;
+}
+
+@keyframes beat {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* BUTTONS */
+.buttons {
+    margin-top: 30px;
+}
+
+button {
+    font-size: 1.2rem;
+    padding: 12px 30px;
+    margin: 10px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+#yesBtn {
+    background: #ff2e63;
+    color: white;
+}
+
+#noBtn {
+    background: white;
+    color: #ff2e63;
+    position: absolute;
+}
+
+/* SUCCESS PAGE */
+#successPage {
+    display: none;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+}
+
+/* Floating hearts */
+.heart-bg {
+    position: absolute;
+    bottom: -50px;
+    font-size: 24px;
+    animation: float 6s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-110vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div class="page" id="questionPage">
+    <div class="heart">❤️</div>
+    <h1>Deeksha</h1>
+    <h2>Will you be my Valentine?</h2>
+
+    <div class="buttons">
+        <button id="yesBtn">YES 💖</button>
+        <button id="noBtn">NO 🙄</button>
+    </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="successPage">
+    <div class="heart">💘</div>
+    <h1>YAYYYY!!! 😍</h1>
+    <h2>You just made me the happiest person ❤️</h2>
+    <p>Happy Valentine’s Day, Deeksha 💌</p>
+</div>
+
+<!-- MUSIC -->
+<iframe width="0" height="0"
+src="https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1&loop=1&playlist=2Vv-BfVoq4g"
+allow="autoplay">
+</iframe>
+
+<script>
+/* NO BUTTON RUNS AWAY */
+const noBtn = document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover", () => {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
+
+/* YES BUTTON */
+document.getElementById("yesBtn").onclick = () => {
+    document.getElementById("questionPage").style.display = "none";
+    document.getElementById("successPage").style.display = "flex";
+};
+
+/* FLOATING HEARTS */
+for (let i = 0; i < 25; i++) {
+    let heart = document.createElement("div");
+    heart.className = "heart-bg";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+    document.body.appendChild(heart);
+}
+</script>
+
+</body>
+</html>
