@@ -59,14 +59,15 @@ button{
   color:white;
 }
 
+/* 🔒 NO BUTTON – FIXED FOREVER */
 #noBtn{
   background:white;
   color:#ff2e63;
-  position:absolute;
+  position:fixed;
   left:50%;
-  top:60px;
-  transform:translateX(-50%);
-  z-index:5;
+  top:60%;
+  transform:translate(-50%,-50%);
+  z-index:9999;
 }
 
 /* SAD TEXT */
@@ -74,7 +75,6 @@ button{
   margin-top:20px;
   font-size:1.5rem;
   min-height:2em;
-  z-index:10;
   animation:shake 0.4s;
 }
 @keyframes shake{
@@ -103,6 +103,7 @@ button{
   border-radius:15px;
   object-fit:cover;
   margin-top:20px;
+  transition:opacity 0.5s ease-in-out;
 }
 
 /* LOVE LETTER */
@@ -146,21 +147,21 @@ button{
 
   <div class="buttons">
     <button id="yesBtn">YES 💖</button>
-    <button id="noBtn">NO 🙄</button>
   </div>
 
   <div id="sadText"></div>
 </div>
 
-<!-- SUCCESS PAGE (MERGED) -->
+<!-- NO BUTTON (GLOBAL & UNBREAKABLE) -->
+<button id="noBtn">NO 🙄</button>
+
+<!-- SUCCESS PAGE -->
 <div class="page" id="successPage">
   <h1>YAYYYY 😍</h1>
   <h2 id="typingText"></h2>
 
   <div class="slideshow">
-    <img id="slide" src="images/Photo1.jpg" alt="Our Memory">
-    <img id="slide" src="images/Photo2.jpg" alt="Our Memory">
-    <img id="slide" src="images/Photo3.jpg" alt="Our Memory">
+    <img id="slide" src="images/Photo1.jpg" alt="Our Memory" loading="lazy">
   </div>
 
   <p>Forever to go, Deeksha 💌</p>
@@ -195,15 +196,16 @@ const messages=[
   "I will cry forever 😭😭😭"
 ];
 
-/* NO BUTTON – ALWAYS VISIBLE */
+/* 🚫 NO BUTTON NEVER DISAPPEARS */
 function moveNo(){
   noCount++;
 
-  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
-  const maxY = 140;
+  const pad = 20;
+  const maxX = window.innerWidth - noBtn.offsetWidth - pad;
+  const maxY = window.innerHeight - noBtn.offsetHeight - pad;
 
   noBtn.style.left = Math.random()*maxX + "px";
-  noBtn.style.top = Math.random()*maxY + "px";
+  noBtn.style.top  = Math.random()*maxY + "px";
 
   sadText.textContent =
     messages[Math.min(noCount-1,messages.length-1)];
@@ -225,6 +227,7 @@ noBtn.addEventListener("touchstart",moveNo);
 document.getElementById("yesBtn").onclick=()=>{
   questionPage.style.display="none";
   successPage.style.display="flex";
+  noBtn.style.display="none";
 
   /* CONFETTI */
   for(let i=0;i<80;i++){
@@ -235,16 +238,18 @@ document.getElementById("yesBtn").onclick=()=>{
     document.body.appendChild(c);
   }
 
-  /* MUSIC (YOUTUBE SHORTS FIXED) */
+  /* MUSIC */
   musicContainer.innerHTML=`
-  <iframe width="0" height="0"
-  src="https://www.youtube.com/embed/7BspO6r4Eog?autoplay=1&mute=1"
-  allow="autoplay"></iframe>`;
+  <iframe id="song"
+    width="0" height="0"
+    src="https://www.youtube.com/embed/7BspO6r4Eog?autoplay=1&mute=1&playsinline=1"
+    allow="autoplay">
+  </iframe>`;
 
   setTimeout(()=>{
-    const iframe=document.querySelector("iframe");
+    const iframe=document.getElementById("song");
     iframe.src=iframe.src.replace("mute=1","mute=0");
-  },1000);
+  },1200);
 
   /* TYPING TEXT */
   const text="You've made me the luckiest person 💕";
@@ -264,10 +269,28 @@ document.getElementById("yesBtn").onclick=()=>{
 letter.onclick=()=>letter.style.display="none";
 
 /* SLIDESHOW */
-const images=["Photo1.jpg","Photo2.jpg","Photo3.jpg"];
+const images=[
+  "images/Photo1.jpg",
+  "images/Photo2.jpg",
+  "images/Photo3.jpg"
+];
+
 let index=0;
+const slide=document.getElementById("slide");
+
+// preload
+images.forEach(src=>{
+  const img=new Image();
+  img.src=src;
+});
+
 setInterval(()=>{
-  slide.src=images[index++%images.length];
+  slide.style.opacity=0;
+  setTimeout(()=>{
+    slide.src=images[index];
+    slide.style.opacity=1;
+    index=(index+1)%images.length;
+  },300);
 },2500);
 </script>
 
