@@ -6,50 +6,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-  --bg1:#ff758c; --bg2:#ff7eb3; --text:#fff;
-}
-body.night {
-  --bg1:#0f2027; --bg2:#203a43; --text:#f8f8f8;
-}
-
-body {
+body{
   margin:0;
   height:100vh;
   overflow:hidden;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  background:linear-gradient(135deg,#ff758c,#ff7eb3);
   font-family:'Segoe UI',sans-serif;
-  color:var(--text);
+  color:white;
   text-align:center;
-  transition:0.8s;
 }
 
-.page {
+/* PAGE */
+.page{
   height:100vh;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
+  position:relative;
+  z-index:1;
 }
 
-h1 { font-size:3.2rem; }
-h2 { font-weight:300; }
+h1{font-size:3.2rem;}
+h2{font-weight:300;}
 
-.heart {
+/* HEART */
+.heart{
   font-size:5rem;
   animation:beat 1.2s infinite;
 }
-@keyframes beat { 50% { transform:scale(1.1); } }
+@keyframes beat{50%{transform:scale(1.1);}}
 
 /* BUTTONS */
-.buttons {
+.buttons{
   margin-top:25px;
   position:relative;
   width:100%;
-  height:150px;
+  height:160px;
 }
 
-button {
+button{
   font-size:1.2rem;
   padding:12px 35px;
   border-radius:30px;
@@ -58,94 +54,91 @@ button {
   font-weight:bold;
 }
 
-#yesBtn {
+#yesBtn{
   background:#ff2e63;
   color:white;
 }
 
-#noBtn {
+#noBtn{
   background:white;
   color:#ff2e63;
   position:absolute;
-  left:55%;
+  left:50%;
+  top:60px;
+  transform:translateX(-50%);
+  z-index:5;
 }
 
 /* SAD TEXT */
-#sadText {
+#sadText{
   margin-top:20px;
   font-size:1.5rem;
+  min-height:2em;
+  z-index:10;
   animation:shake 0.4s;
 }
-@keyframes shake {
+@keyframes shake{
   25%{transform:translateX(-5px);}
   50%{transform:translateX(5px);}
 }
 
 /* CRYING EMOJI */
-.cry {
+.cry{
   position:fixed;
   font-size:28px;
   animation:fall 3s linear forwards;
+  z-index:0;
 }
-@keyframes fall {
-  to { transform:translateY(100vh); opacity:0; }
+@keyframes fall{
+  to{transform:translateY(100vh);opacity:0;}
 }
 
-/* SUCCESS */
-#successPage { display:none; }
+/* SUCCESS PAGE */
+#successPage{display:none;}
 
-.slideshow img {
+/* SLIDESHOW */
+.slideshow img{
   width:180px;
   height:180px;
   border-radius:15px;
   object-fit:cover;
-  animation:fade 2.5s infinite;
-}
-@keyframes fade {
-  0%{opacity:0;} 20%{opacity:1;}
-  80%{opacity:1;} 100%{opacity:0;}
-}
-
-/* CONFETTI */
-.confetti {
-  position:fixed;
-  width:10px;height:10px;
-  animation:fall 3s linear forwards;
+  margin-top:20px;
 }
 
 /* LOVE LETTER */
-#letter {
+#letter{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.6);
   display:none;
   justify-content:center;
   align-items:center;
+  z-index:20;
 }
-#letter div {
+
+#letter div{
   background:white;
   color:#ff2e63;
   padding:25px;
   border-radius:15px;
   width:80%;
   max-width:350px;
+  text-align:center;
 }
 
-/* NIGHT MODE BTN */
-#mode {
+/* CONFETTI */
+.confetti{
   position:fixed;
-  top:15px;
-  right:15px;
-  font-size:24px;
-  cursor:pointer;
+  width:10px;
+  height:10px;
+  animation:fall 3s linear forwards;
 }
 </style>
 </head>
 
 <body>
 
-<div id="mode">🌙</div>
-
+<!-- QUESTION PAGE -->
 <div class="page" id="questionPage">
   <div class="heart">❤️</div>
   <h1>Deeksha</h1>
@@ -159,103 +152,123 @@ button {
   <div id="sadText"></div>
 </div>
 
+<!-- SUCCESS PAGE (MERGED) -->
 <div class="page" id="successPage">
   <h1>YAYYYY 😍</h1>
   <h2 id="typingText"></h2>
 
   <div class="slideshow">
-    <img id="slide" src="photo1.jpg">
+    <img id="slide" src="images/Photo1.jpg" alt="Our Memory">
+    <img id="slide" src="images/Photo2.jpg" alt="Our Memory">
+    <img id="slide" src="images/Photo3.jpg" alt="Our Memory">
   </div>
 
   <p>Forever to go, Deeksha 💌</p>
 </div>
 
+<!-- LOVE LETTER -->
 <div id="letter">
   <div>
     <h2>My Love 💖</h2>
     <p>
-      From today, every heartbeat is yours.  
+      From today, every heartbeat is yours.<br>
       Thank you for choosing me 🥹💍
     </p>
-    <p>(Tap anywhere to close)</p>
+    <p style="font-size:0.9rem;">(Tap anywhere to close)</p>
   </div>
 </div>
 
+<!-- MUSIC -->
 <div id="musicContainer"></div>
 
 <script>
-const noBtn=document.getElementById("noBtn");
-const sadText=document.getElementById("sadText");
-let noCount=0;
+const noBtn = document.getElementById("noBtn");
+const sadText = document.getElementById("sadText");
+let noCount = 0;
 
 const messages=[
- "Are you sure? 😟",
- "You are breaking my heart 💔",
- "Don't do this please 🥺",
- "I am a cute baby 😭👉👈",
- "Pleaseeeee 😭💖",
- "I will cry forever 😭😭😭"
+  "Are you sure? 😟",
+  "You are breaking my heart 💔",
+  "Don't do this please 🥺",
+  "I am a cute baby 😭👉👈",
+  "Pleaseeeee 😭💖",
+  "I will cry forever 😭😭😭"
 ];
 
-/* NO BUTTON – NEVER DISAPPEARS */
+/* NO BUTTON – ALWAYS VISIBLE */
 function moveNo(){
   noCount++;
-  noBtn.style.left=Math.random()*(window.innerWidth-120)+"px";
-  noBtn.style.top=Math.random()*(window.innerHeight-80)+"px";
-  sadText.innerHTML=messages[Math.min(noCount-1,messages.length-1)];
 
-  // crying emojis
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = 140;
+
+  noBtn.style.left = Math.random()*maxX + "px";
+  noBtn.style.top = Math.random()*maxY + "px";
+
+  sadText.textContent =
+    messages[Math.min(noCount-1,messages.length-1)];
+
   for(let i=0;i<3;i++){
     const c=document.createElement("div");
     c.className="cry";
-    c.innerHTML="😭";
+    c.textContent="😭";
     c.style.left=Math.random()*100+"vw";
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),3000);
   }
 }
+
 noBtn.addEventListener("mouseenter",moveNo);
 noBtn.addEventListener("touchstart",moveNo);
 
-/* YES */
+/* YES BUTTON */
 document.getElementById("yesBtn").onclick=()=>{
   questionPage.style.display="none";
   successPage.style.display="flex";
 
-  // music from 50s
+  /* CONFETTI */
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=["#ff2e63","#fff","#ffd166"][Math.floor(Math.random()*3)];
+    document.body.appendChild(c);
+  }
+
+  /* MUSIC (YOUTUBE SHORTS FIXED) */
   musicContainer.innerHTML=`
   <iframe width="0" height="0"
-  src="https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1&start=50"
+  src="https://www.youtube.com/embed/7BspO6r4Eog?autoplay=1&mute=1"
   allow="autoplay"></iframe>`;
 
-  // typing
-  let t="You've made me the luckiest person 💕",i=0;
+  setTimeout(()=>{
+    const iframe=document.querySelector("iframe");
+    iframe.src=iframe.src.replace("mute=1","mute=0");
+  },1000);
+
+  /* TYPING TEXT */
+  const text="You've made me the luckiest person 💕";
+  let i=0;
   (function type(){
-    if(i<t.length){
-      typingText.innerHTML+=t[i++];
+    if(i<text.length){
+      typingText.textContent+=text[i++];
       setTimeout(type,60);
     }
   })();
 
-  // love letter
+  /* LOVE LETTER */
   setTimeout(()=>letter.style.display="flex",3000);
-};
-
-/* SLIDESHOW */
-const imgs=["photo1.jpg","photo2.jpg","photo3.jpg"];
-let s=0;
-setInterval(()=>{
-  slide.src=imgs[s++%imgs.length];
-},2500);
-
-/* NIGHT MODE */
-mode.onclick=()=>{
-  document.body.classList.toggle("night");
-  mode.innerHTML=document.body.classList.contains("night")?"☀️":"🌙";
 };
 
 /* CLOSE LETTER */
 letter.onclick=()=>letter.style.display="none";
+
+/* SLIDESHOW */
+const images=["Photo1.jpg","Photo2.jpg","Photo3.jpg"];
+let index=0;
+setInterval(()=>{
+  slide.src=images[index++%images.length];
+},2500);
 </script>
 
 </body>
