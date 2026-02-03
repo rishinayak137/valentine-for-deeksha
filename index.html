@@ -6,14 +6,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* 🌙 NIGHT ROMANTIC BACKGROUND */
 body{
   margin:0;
   height:100vh;
   overflow:hidden;
-  background:linear-gradient(135deg,#ff758c,#ff7eb3);
   font-family:'Segoe UI',sans-serif;
   color:white;
   text-align:center;
+
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.15), transparent 35%),
+    linear-gradient(160deg,#0b0f2b,#1a123f,#2b0f45);
+
+  background-size:200% 200%;
+  animation:nightFlow 12s ease infinite;
+}
+
+@keyframes nightFlow{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* 🌹 FALLING ROSE PETALS */
+.petal{
+  position:fixed;
+  top:-30px;
+  font-size:22px;
+  opacity:0.9;
+  animation:fallPetal linear forwards;
+  z-index:0;
+}
+
+@keyframes fallPetal{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
 }
 
 /* PAGE */
@@ -24,11 +54,17 @@ body{
   justify-content:center;
   align-items:center;
   position:relative;
-  z-index:1;
+  z-index:2;
 }
 
-h1{font-size:3.2rem;}
-h2{font-weight:300;}
+/* 💖 GLOWING NAME */
+.glow{
+  font-size:3.5rem;
+  text-shadow:
+    0 0 10px #ff5fa2,
+    0 0 20px #ff2e63,
+    0 0 40px #ff2e63;
+}
 
 /* HEART */
 .heart{
@@ -38,13 +74,6 @@ h2{font-weight:300;}
 @keyframes beat{50%{transform:scale(1.1);}}
 
 /* BUTTONS */
-.buttons{
-  margin-top:25px;
-  position:relative;
-  width:100%;
-  height:160px;
-}
-
 button{
   font-size:1.2rem;
   padding:12px 35px;
@@ -57,9 +86,9 @@ button{
 #yesBtn{
   background:#ff2e63;
   color:white;
+  box-shadow:0 0 15px #ff2e63;
 }
 
-/* 🔒 NO BUTTON – FIXED FOREVER */
 #noBtn{
   background:white;
   color:#ff2e63;
@@ -67,30 +96,14 @@ button{
   left:50%;
   top:60%;
   transform:translate(-50%,-50%);
-  z-index:9999;
+  z-index:999;
 }
 
 /* SAD TEXT */
 #sadText{
   margin-top:20px;
-  font-size:1.5rem;
+  font-size:1.4rem;
   min-height:2em;
-  animation:shake 0.4s;
-}
-@keyframes shake{
-  25%{transform:translateX(-5px);}
-  50%{transform:translateX(5px);}
-}
-
-/* CRYING EMOJI */
-.cry{
-  position:fixed;
-  font-size:28px;
-  animation:fall 3s linear forwards;
-  z-index:0;
-}
-@keyframes fall{
-  to{transform:translateY(100vh);opacity:0;}
 }
 
 /* SUCCESS PAGE */
@@ -103,14 +116,14 @@ button{
   border-radius:15px;
   object-fit:cover;
   margin-top:20px;
-  transition:opacity 0.5s ease-in-out;
+  box-shadow:0 0 20px rgba(255,46,99,0.6);
 }
 
 /* LOVE LETTER */
 #letter{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.7);
   display:none;
   justify-content:center;
   align-items:center;
@@ -118,21 +131,13 @@ button{
 }
 
 #letter div{
-  background:white;
-  color:#ff2e63;
+  background:#1a123f;
+  color:#ff9acb;
   padding:25px;
   border-radius:15px;
   width:80%;
   max-width:350px;
-  text-align:center;
-}
-
-/* CONFETTI */
-.confetti{
-  position:fixed;
-  width:10px;
-  height:10px;
-  animation:fall 3s linear forwards;
+  box-shadow:0 0 25px #ff2e63;
 }
 </style>
 </head>
@@ -142,117 +147,77 @@ button{
 <!-- QUESTION PAGE -->
 <div class="page" id="questionPage">
   <div class="heart">❤️</div>
-  <h1>Deeksha</h1>
+  <h1 class="glow">Deeksha</h1>
   <h2>Will you be my Valentine?</h2>
-
-  <div class="buttons">
-    <button id="yesBtn">YES 💖</button>
-  </div>
-
+  <button id="yesBtn">YES 💖</button>
   <div id="sadText"></div>
 </div>
 
-<!-- NO BUTTON (GLOBAL & UNBREAKABLE) -->
 <button id="noBtn">NO 🙄</button>
 
 <!-- SUCCESS PAGE -->
 <div class="page" id="successPage">
   <h1>YAYYYY 😍</h1>
   <h2 id="typingText"></h2>
-
   <div class="slideshow">
-    <img id="slide" src="images/photo1.jpeg" alt="Our Memory" loading="lazy">
+    <img id="slide" src="images/photo1.jpeg">
   </div>
-
-  <p>Forever to go, Deeksha 💌</p>
+  <p>Forever with you, Deeksha 🌙💍</p>
 </div>
 
 <!-- LOVE LETTER -->
 <div id="letter">
   <div>
-    <h2>My Love 💖</h2>
+    <h2>My Love 🌹</h2>
     <p>
-      From today, every heartbeat is yours.<br>
-      Thank you for choosing me 🥹💍
+      Under this moonlit sky,<br>
+      my heart chose you forever 💖
     </p>
     <p style="font-size:0.9rem;">(Tap anywhere to close)</p>
   </div>
 </div>
 
-<!-- MUSIC -->
-<div id="musicContainer"></div>
-
 <script>
-const noBtn = document.getElementById("noBtn");
-const sadText = document.getElementById("sadText");
-let noCount = 0;
+/* 🌹 ROSE PETALS */
+setInterval(()=>{
+  const p=document.createElement("div");
+  p.className="petal";
+  p.textContent="🌹";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=(6+Math.random()*6)+"s";
+  p.style.fontSize=(18+Math.random()*20)+"px";
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),12000);
+},700);
 
+const noBtn=document.getElementById("noBtn");
+const sadText=document.getElementById("sadText");
+let count=0;
 const messages=[
   "Are you sure? 😟",
-  "You are breaking my heart 💔",
-  "Don't do this please 🥺",
-  "I am a cute baby 😭👉👈",
-  "Pleaseeeee 😭💖",
-  "I will cry forever 😭😭😭"
+  "Please don’t say no 🥺",
+  "My heart is falling 💔",
+  "I’ll wait forever 🌙",
+  "You are my destiny 💖"
 ];
 
-/* 🚫 NO BUTTON NEVER DISAPPEARS */
 function moveNo(){
-  noCount++;
-
-  const pad = 20;
-  const maxX = window.innerWidth - noBtn.offsetWidth - pad;
-  const maxY = window.innerHeight - noBtn.offsetHeight - pad;
-
-  noBtn.style.left = Math.random()*maxX + "px";
-  noBtn.style.top  = Math.random()*maxY + "px";
-
-  sadText.textContent =
-    messages[Math.min(noCount-1,messages.length-1)];
-
-  for(let i=0;i<3;i++){
-    const c=document.createElement("div");
-    c.className="cry";
-    c.textContent="😭";
-    c.style.left=Math.random()*100+"vw";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),3000);
-  }
+  count++;
+  noBtn.style.left=Math.random()*80+"vw";
+  noBtn.style.top=Math.random()*80+"vh";
+  sadText.textContent=messages[Math.min(count-1,messages.length-1)];
 }
 
-noBtn.addEventListener("mouseenter",moveNo);
-noBtn.addEventListener("touchstart",moveNo);
+noBtn.onmouseenter=moveNo;
+noBtn.ontouchstart=moveNo;
 
-/* YES BUTTON */
-document.getElementById("yesBtn").onclick=()=>{
+/* YES */
+yesBtn.onclick=()=>{
   questionPage.style.display="none";
   successPage.style.display="flex";
   noBtn.style.display="none";
 
-  /* CONFETTI */
-  for(let i=0;i<80;i++){
-    const c=document.createElement("div");
-    c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
-    c.style.background=["#ff2e63","#fff","#ffd166"][Math.floor(Math.random()*3)];
-    document.body.appendChild(c);
-  }
-
-  /* MUSIC */
-  musicContainer.innerHTML=`
-  <iframe id="song"
-    width="0" height="0"
-    src="https://www.youtube.com/shorts/7BspO6r4Eog"
-    allow="autoplay">
-  </iframe>`;
-
-  setTimeout(()=>{
-    const iframe=document.getElementById("song");
-    iframe.src=iframe.src.replace("mute=1","mute=0");
-  },1200);
-
-  /* TYPING TEXT */
-  const text="You've made me the luckiest person 💕";
+  const text="You've made my nights magical 💫";
   let i=0;
   (function type(){
     if(i<text.length){
@@ -261,35 +226,20 @@ document.getElementById("yesBtn").onclick=()=>{
     }
   })();
 
-  /* LOVE LETTER */
-  setTimeout(()=>letter.style.display="flex",3000);
+  setTimeout(()=>letter.style.display="flex",2500);
 };
 
-/* CLOSE LETTER */
 letter.onclick=()=>letter.style.display="none";
 
 /* SLIDESHOW */
-const images=[
-  "images/photo1.jpeg",
-  "images/photo2.jpeg",
-  "images/photo3.jpeg"
-];
-
-let index=0;
-const slide=document.getElementById("slide");
-
-// preload
-images.forEach(src=>{
-  const img=new Image();
-  img.src=src;
-});
-
+const images=["images/photo1.jpeg","images/photo2.jpeg","images/photo3.jpeg"];
+let idx=0;
 setInterval(()=>{
   slide.style.opacity=0;
   setTimeout(()=>{
-    slide.src=images[index];
+    slide.src=images[idx];
     slide.style.opacity=1;
-    index=(index+1)%images.length;
+    idx=(idx+1)%images.length;
   },300);
 },2500);
 </script>
